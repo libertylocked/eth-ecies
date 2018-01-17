@@ -7,7 +7,11 @@
     "test": "mocha"
   },
   "keywords": [],
-  "author": "",
+  "author": "libertylocked",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/libertylocked/eth-ecies"
+  },
   "license": "MIT",
   "dependencies": {
     "elliptic": "^6.4.0"
