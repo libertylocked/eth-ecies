@@ -59,7 +59,7 @@ const BufferEqual = (b1, b2) => {
  * @param {Buffer} plaintext Plaintext to be encrypted
  * @returns {Buffer} Encrypted message, serialized, 113+ bytes
  */
-const Encrypt = async (pubKeyTo, plaintext) => {
+const Encrypt = (pubKeyTo, plaintext) => {
   const ephemPrivKey = ec.keyFromPrivate(Crypto.randomBytes(32));
   const ephemPubKey = ephemPrivKey.getPublic();
   const ephemPubKeyEncoded = Buffer.from(ephemPubKey.encode());

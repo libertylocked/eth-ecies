@@ -7,32 +7,31 @@ const eutil = require("ethereumjs-util");
 
 describe("ECIES", () => {
   describe("encrypt", () => {
-    it("should encrypt a message without error", async () => {
+    it("should encrypt a message without error", () => {
       const privKey = crypto.randomBytes(32);
       const pubKey = eutil.privateToPublic(privKey);
-      const encrypted = await ecies.encrypt(pubKey, `foo`);
+      const encrypted = ecies.encrypt(pubKey, `foo`);
       assert.isAtLeast(encrypted.length, 113);
     });
 
     it("should throw an error if priv key is given", () => {
       const privKey = crypto.randomBytes(32);
-      return ecies.encrypt(privKey, "foo")
-      .then(() => {
-        assert.fail("did not throw error when a priv key is given");
-      })
-      .catch((err) => {
+      try {
+        ecies.encrypt(privKey, "foo")
+        assert.fail("encryption should not work when a priv key is given");
+      } catch (err) {
         // ok
-      })
+      }
     });
   });
 
   describe("roundtrip", () => {
-    it("should return the same plaintext after roundtrip", async () => {
+    it("should return the same plaintext after roundtrip", () => {
       const plaintext = new Buffer("spam");
       const privKey = crypto.randomBytes(32);
       const pubKey = eutil.privateToPublic(privKey);
-      const encrypted = await ecies.encrypt(pubKey, plaintext);
-      const decrypted = await ecies.decrypt(privKey, encrypted);
+      const encrypted = ecies.encrypt(pubKey, plaintext);
+      const decrypted = ecies.decrypt(privKey, encrypted);
       assert.equal(decrypted.toString(), plaintext.toString());
     });
 
@@ -41,24 +40,20 @@ describe("ECIES", () => {
       const privKey = crypto.randomBytes(32);
       const pubKey = eutil.privateToPublic(privKey);
       const fakePrivKey = crypto.randomBytes(32);
-      return ecies.encrypt(pubKey, plaintext)
-      .then((encrypted) => {
-        return ecies.decrypt(fakePrivKey, encrypted);
-      })
-      .then(() => {
-        assert.fail("decryption should not work");
-      })
-      .catch((err) => {
+      try {
+        ecies.encrypt(pubKey, plaintext)
+        assert.fail("decryption should not work for incorrect priv key");
+      } catch (err) {
         // ok
-      })
+      }
     });
 
-    it("should be able to encrypt and decrypt a longer message (1024 bytes)", async () => {
+    it("should be able to encrypt and decrypt a longer message (1024 bytes)", () => {
       const plaintext = crypto.randomBytes(1024);
       const privKey = crypto.randomBytes(32);
       const pubKey = eutil.privateToPublic(privKey);
-      const encrypted = await ecies.encrypt(pubKey, plaintext);
-      const decrypted = await ecies.decrypt(privKey, encrypted);
+      const encrypted = ecies.encrypt(pubKey, plaintext);
+      const decrypted = ecies.decrypt(privKey, encrypted);
       assert.equal(decrypted.toString(), plaintext.toString());
     })
   })
