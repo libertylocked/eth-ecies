@@ -57,10 +57,14 @@ const BufferEqual = (b1, b2) => {
  * ECIES encrypt
  * @param {Buffer} pubKeyTo Ethereum pub key, 64 bytes
  * @param {Buffer} plaintext Plaintext to be encrypted
+ * @param {?{?iv: Buffer, ?ephemPrivKey: Buffer}} opts
+ * optional iv (16 bytes) and ephem key (32 bytes)
  * @returns {Buffer} Encrypted message, serialized, 113+ bytes
  */
-const Encrypt = (pubKeyTo, plaintext) => {
-  const ephemPrivKey = ec.keyFromPrivate(Crypto.randomBytes(32));
+const Encrypt = (pubKeyTo, plaintext, opts) => {
+  opts = opts || {};
+  const ephemPrivKey = ec.keyFromPrivate(
+    opts.ephemPrivKey || Crypto.randomBytes(32));
   const ephemPubKey = ephemPrivKey.getPublic();
   const ephemPubKeyEncoded = Buffer.from(ephemPubKey.encode());
   // Every EC public key begins with the 0x04 prefix before giving
@@ -68,7 +72,7 @@ const Encrypt = (pubKeyTo, plaintext) => {
   const px = ephemPrivKey.derive(ec.keyFromPublic(
     Buffer.concat([Buffer.from([0x04]), pubKeyTo])).getPublic());
   const hash = Crypto.createHash("sha512").update(px.toBuffer()).digest();
-  const iv = Crypto.randomBytes(16);
+  const iv = opts.iv || Crypto.randomBytes(16);
   const encryptionKey = hash.slice(0, 32);
   const macKey = hash.slice(32);
   const ciphertext = AES256CbcEncrypt(iv, encryptionKey, plaintext);
