@@ -7,6 +7,7 @@
 const Crypto = require("crypto");
 const EC = require("elliptic").ec;
 const ec = new EC("secp256k1");
+const Buffer = require('safe-buffer').Buffer
 
 /**
  * AES-256 CBC encrypt
@@ -71,7 +72,7 @@ const Encrypt = (pubKeyTo, plaintext, opts) => {
   // the location of the two point on the curve
   const px = ephemPrivKey.derive(ec.keyFromPublic(
     Buffer.concat([Buffer.from([0x04]), pubKeyTo])).getPublic());
-  const hash = Crypto.createHash("sha512").update(px.toBuffer()).digest();
+  const hash = Crypto.createHash("sha512").update(px.toArrayLike(Buffer)).digest();
   const iv = opts.iv || Crypto.randomBytes(16);
   const encryptionKey = hash.slice(0, 32);
   const macKey = hash.slice(32);
@@ -102,7 +103,7 @@ const Decrypt = (privKey, encrypted) => {
   const ephemPubKey = ec.keyFromPublic(ephemPubKeyEncoded).getPublic();
 
   const px = ec.keyFromPrivate(privKey).derive(ephemPubKey);
-  const hash = Crypto.createHash("sha512").update(px.toBuffer()).digest();
+  const hash = Crypto.createHash("sha512").update(px.toArrayLike(Buffer)).digest();
   const encryptionKey = hash.slice(0, 32);
   const macKey = hash.slice(32);
   const dataToMac = Buffer.concat([iv, ephemPubKeyEncoded, ciphertext]);
