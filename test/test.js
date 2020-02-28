@@ -40,7 +40,7 @@ describe("ECIES", () => {
 
   describe("roundtrip", () => {
     it("should return the same plaintext after roundtrip", () => {
-      const plaintext = new Buffer("spam");
+      const plaintext = Buffer.from("spam");
       const privKey = crypto.randomBytes(32);
       const pubKey = eutil.privateToPublic(privKey);
       const encrypted = ecies.encrypt(pubKey, plaintext);
@@ -49,7 +49,7 @@ describe("ECIES", () => {
     });
 
     it("should only decrypt if correct priv key is given", () => {
-      const plaintext = new Buffer("spam");
+      const plaintext = Buffer.from("spam");
       const privKey = crypto.randomBytes(32);
       const pubKey = eutil.privateToPublic(privKey);
       const fakePrivKey = crypto.randomBytes(32);
@@ -58,11 +58,11 @@ describe("ECIES", () => {
     });
 
     it("should detect ciphertext changes thru MAC", () => {
-      const plaintext = new Buffer("spam");
+      const plaintext = Buffer.from("spam");
       const privKey = crypto.randomBytes(32);
       const pubKey = eutil.privateToPublic(privKey);
       const encrypted = ecies.encrypt(pubKey, plaintext);
-      const modifiedEncrypted = new Buffer(encrypted.byteLength);
+      const modifiedEncrypted = Buffer.from(encrypted.byteLength);
       encrypted.copy(modifiedEncrypted, 0, 0, 113);
       expect(() => ecies.decrypt(privKey, modifiedEncrypted))
         .to.throw('MAC mismatch');
@@ -78,7 +78,7 @@ describe("ECIES", () => {
     })
 
     it("should decrypt with provided iv and ephem key", () => {
-      const plaintext = new Buffer("spam");
+      const plaintext = Buffer.from("spam");
       const privKey = crypto.randomBytes(32);
       const pubKey = eutil.privateToPublic(privKey);
       const iv = crypto.randomBytes(16);
