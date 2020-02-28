@@ -62,7 +62,7 @@ describe("ECIES", () => {
       const privKey = crypto.randomBytes(32);
       const pubKey = eutil.privateToPublic(privKey);
       const encrypted = ecies.encrypt(pubKey, plaintext);
-      const modifiedEncrypted = Buffer.from(encrypted.byteLength);
+      const modifiedEncrypted = Buffer.allocUnsafe(encrypted.byteLength);
       encrypted.copy(modifiedEncrypted, 0, 0, 113);
       expect(() => ecies.decrypt(privKey, modifiedEncrypted))
         .to.throw('MAC mismatch');
