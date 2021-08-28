@@ -1,6 +1,6 @@
 {
   "name": "eth-ecies",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "ECIES encrypt/decrypt library for Ethereum",
   "main": "index.js",
   "scripts": {
@@ -14,12 +14,12 @@
   },
   "license": "MIT",
   "dependencies": {
-    "elliptic": "^6.5.3",
+    "elliptic": "^6.5.4",
     "safe-buffer": "^5.2.1"
   },
   "devDependencies": {
-    "chai": "^4.2.0",
-    "ethereumjs-util": "^5.2.1",
-    "mocha": "^4.1.0"
+    "chai": "^4.3.4",
+    "ethereumjs-util": "^7.1.0",
+    "mocha": "^9.1.0"
   }
 }
