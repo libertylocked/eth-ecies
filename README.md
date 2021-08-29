@@ -22,4 +22,4 @@ let plaintext = ecies.decrypt(ethPrivKey, encryptedMsg);
 To derive the public key from a private key, you can use `ethereumjs-util` module
 
 # Security
-The ECIES implementation uses **fixed Diffie-Hellman** (*ephemeral-static*) key exchange and provides no *Perfect Forward Secrecy (PFS)*. AES-256-CBC is used as AEAD algorithm.
+The ECIES implementation uses **fixed Diffie-Hellman** (*ephemeral-static*) key exchange and provides no *Perfect Forward Secrecy (PFS)*. AES-256-CBC HMAC-SHA256 is used as AEAD algorithm.
